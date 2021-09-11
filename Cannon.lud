@@ -1,0 +1,43 @@
+(define "StepForward" (move Step Forward (to if:(is Empty (to)))))
+(define "StepDiagonalForward"
+	(move Step (directions {FR FL} of:All)
+		(to if:(or
+			(is Empty(to))
+			(is Enemy (who at:(to))))
+		(apply (remove (to)))
+		)
+	)
+)
+(define "ReachedTarget" (is In (last To) (sites Mover)))
+(game "Cannon"
+	(players { (player N) (player S) })
+	(equipment
+		{
+			(board (square 10) use:Vertex)
+			(piece "Pawn"
+				Each (or ("StepForward") ("StepDiagonalForward"))
+			)
+			(hand Each)
+			(regions P1 (sites Top))
+			(regions P2 (sites Bottom))
+		}
+	)
+	(rules
+		(start {
+			(place "Pawn1" { "A3" "C3" "E3" "G3" "I3" "A2" "C2" "E2" "G2" "I2" "A4" "C4" "E4" "G4" "I4"})
+			(place "Pawn2" { "B9" "D9" "F9" "H9" "J9" "B8" "D8" "F8" "H8" "J8" "B7" "D7" "F7" "H7" "J7"})
+		})
+		(play
+			(or
+				(if (is Occupied (handSite Mover))
+					(move
+						(from (handSite Mover))
+						(to (expand (sites Next) steps:2) if:(is Empty (to)))
+					)
+				)
+				(forEach Piece)
+			)
+		)
+		(end (if "ReachedTarget" (result Mover Win)))
+	)
+)
