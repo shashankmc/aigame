@@ -33,20 +33,41 @@
     )
 )
 (define "Retreat"
-    //(move Slide (directions {BRR BLL Backwards} of:All )
-    //)
     (hop (directions {BR BL Backwards} of:All)
         (between if:(is Empty (who at:(between))))
         (to if:(is Empty(to)))
     )
 )
-(define "Jump"
-    (move Hop (directions {Forward Rightward Leftward} of:All)
-        (between if:(is Friend (who at:(between))))
-        (to
-            if:(or (is Empty (to)) (is Enemy (who at:(to))))
-                (apply (remove (to)))
+(define "IsBehindAPawn" (= (id "Pawn" Mover) (what at:("AheadSite"))))
+(define "AheadSite" (ahead (from) #1 (directions Vertex from:(from) to:(to))))
+(define "FireInTheHole"
+    (forEach Direction All
+        (if
+            (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
+            (if
+                (is Enemy (who at:("AheadSite" steps:3)))
+                (move Remove ("AheadSite" steps:3))
+            )
         )
+    )
+)
+(define "Jump"
+    //(forEach Direction All
+    //    (if
+    //        (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:1)))
+    //        (if
+    //            (is Empty (who at:("AheadSite" steps:3)))
+    //            (move Remove ("AheadSite" steps:3))
+    //        ) 
+    //    )
+    //)
+   //(move Hop All
+   //     (between if:(is Friend (who at:(between))))
+   //     (to if:(is Empty (to)))
+   //)
+    (move Slide "AllTracks"
+        (between if:(or (= (between) (from)) (is In (between) (sites Friend))))
+        (to if:(is Empty (to)))
     )
 )
 (define "ReachedTarget" (is In (last To) (sites Mover)))
@@ -62,6 +83,7 @@
                                 ("StepDiagonalForward")
                                 ("Jump")
                                 (if ("EnemyAround") ("Retreat"))
+                                ("FireInTheHole")
                         })    
             )
             
@@ -107,6 +129,7 @@
         (end (if "ReachedTarget" (result Mover Win)))
     )
 )
+
 
 
 
