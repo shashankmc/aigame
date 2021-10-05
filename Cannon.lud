@@ -1,8 +1,8 @@
 (define "EnemyAround"
     (not
         (all Sites
-            (sites Around (from) of:All)
-            (if:(not (is Enemy (who at:(site)))))
+            (sites Around (from) All)
+            if:(not (is Enemy (who at:(site))))
         )
     )
 )
@@ -24,11 +24,31 @@
     )
 )
 (define "StepBackward" 
-    (move Slide (directions {BR BL Backwards} of:All))
-        //(to if:(is Empty(to))
-    //)
+    (move Slide (directions {BR BL Backwards} of:All)
+        (to
+            if:(and
+                (is Empty (to)) 
+                )
+        )
+    )
 )
-
+(define "Retreat"
+    //(move Slide (directions {BRR BLL Backwards} of:All )
+    //)
+    (hop (directions {BR BL Backwards} of:All)
+        (between if:(is Empty (who at:(between))))
+        (to if:(is Empty(to)))
+    )
+)
+(define "Jump"
+    (move Hop (directions {Forward Rightward Leftward} of:All)
+        (between if:(is Friend (who at:(between))))
+        (to
+            if:(or (is Empty (to)) (is Enemy (who at:(to))))
+                (apply (remove (to)))
+        )
+    )
+)
 (define "ReachedTarget" (is In (last To) (sites Mover)))
 (game "Cannon"
     (players { (player N) (player S) })
@@ -37,13 +57,11 @@
             (board (square 10) use:Vertex)
             (piece "Pawn"
                Each (or {
-                                //("EnemyAround")
-                                 
-                                ("StepBackward")
-                                
                                 //("StepBackward")
                                 ("StepCapture")
                                 ("StepDiagonalForward")
+                                ("Jump")
+                                (if ("EnemyAround") ("Retreat"))
                         })    
             )
             
@@ -89,6 +107,7 @@
         (end (if "ReachedTarget" (result Mover Win)))
     )
 )
+
 
 
 
