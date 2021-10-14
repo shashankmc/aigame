@@ -43,8 +43,8 @@
 (define "FireInTheHole"
     (forEach Direction All
         (if
-          (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
-//            (and ("IsBehindTwoPawns") (is Empty ("AheadSite" steps:2)))
+           (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
+//           (and ("IsBehindTwoPawns") (is Empty ("AheadSite" steps:2)))
             (if
                 (is Enemy (who at:("AheadSite" steps:3)))
                 (move Remove ("AheadSite" steps:3))
