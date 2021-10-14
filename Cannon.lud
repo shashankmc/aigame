@@ -53,10 +53,6 @@
     )
 )
 (define "ImmaJump"
-  //(hop (directions {Forwards Leftwards Backwards} of:All)
-  //  (between if:(is Friend (who at:(between))))
-  //  (to if:(is Empty(to)))
-  //)
     (move Hop (directions {Forwards Leftwards Backwards} of:All)
         (between before:0 (range 2)
             if:(is Friend (who at:(between)))
