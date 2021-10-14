@@ -61,6 +61,7 @@
     )
 )
 (define "ReachedTarget" (is In (last To) (sites Mover)))
+(define "NoMoves" (if (no Moves Next) (result Next #1)))
 (game "Cannon"
     (players { (player N) (player S) })
     (equipment
@@ -116,7 +117,11 @@
             )
         }
         
-        (end (if "ReachedTarget" (result Mover Win)))
+        (end (if (or 
+                        ("ReachedTarget" (result Mover Win)))
+                        ("NoMoves" Loss (result Mover Win))
+                    )
+                )
     )
 )
 
