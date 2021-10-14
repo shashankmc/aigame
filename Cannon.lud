@@ -43,7 +43,8 @@
 (define "FireInTheHole"
     (forEach Direction All
         (if
-            (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
+          (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
+//            (and ("IsBehindTwoPawns") (is Empty ("AheadSite" steps:2)))
             (if
                 (is Enemy (who at:("AheadSite" steps:3)))
                 (move Remove ("AheadSite" steps:3))
@@ -51,23 +52,16 @@
         )
     )
 )
-(define "Jump"
-    //(forEach Direction All
-    //    (if
-    //        (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:1)))
-    //        (if
-    //            (is Empty (who at:("AheadSite" steps:3)))
-    //            (move Remove ("AheadSite" steps:3))
-    //        ) 
-    //    )
-    //)
-   //(move Hop All
-   //     (between if:(is Friend (who at:(between))))
-   //     (to if:(is Empty (to)))
-   //)
-    (move Slide "AllTracks"
-        (between if:(or (= (between) (from)) (is In (between) (sites Friend))))
-        (to if:(is Empty (to)))
+(define "ImmaJump"
+  //(hop (directions {Forwards Leftwards Backwards} of:All)
+  //  (between if:(is Friend (who at:(between))))
+  //  (to if:(is Empty(to)))
+  //)
+    (move Hop (directions {Forwards Leftwards Backwards} of:All)
+        (between before:0 (range 2)
+            if:(is Friend (who at:(between)))
+        )
+        (to if:(is Empty(to)))
     )
 )
 (define "ReachedTarget" (is In (last To) (sites Mover)))
@@ -80,8 +74,8 @@
                Each (or {
                                 //("StepBackward")
                                 ("StepCapture")
+                                ("ImmaJump")
                                 ("StepDiagonalForward")
-                                ("Jump")
                                 (if ("EnemyAround") ("Retreat"))
                                 ("FireInTheHole")
                         })    
@@ -129,6 +123,8 @@
         (end (if "ReachedTarget" (result Mover Win)))
     )
 )
+
+
 
 
 
