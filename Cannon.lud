@@ -53,7 +53,7 @@
     )
 )
 (define "ImmaJump"
-    (move Hop (directions {Forwards Leftwards Backwards} of:All)
+    (move Hop (directions {Forwards Leftwards Backwards Rightwards} of:All)
         (between before:0 (range 2)
             if:(is Friend (who at:(between)))
         )
@@ -63,6 +63,9 @@
 (define "ReachedTarget" (is In (last To) (sites Mover)))
 (define "NoMoves"
     (if (no Moves Next) (result Next #1))
+)
+(define "HandEmpty"
+    (= 0 (count Cell in:(sites Hand #1)))
 )
 (game "Cannon"
     (players { (player N) (player S) })
@@ -120,10 +123,15 @@
         }
         
         (end
+            {
                 ("NoMoves" Loss)
+                //(if (and (= (where "Castle" P1) Off) ("HandEmpty" P2)) (result P2 Win))
+                //(if (and (= (where "Castle" P2) Off) ("HandEmpty" P1))(result P1 Win))
+             }
         )
-    )
+      )
 )
+
 
 
 
