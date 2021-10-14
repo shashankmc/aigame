@@ -125,12 +125,14 @@
         (end
             {
                 ("NoMoves" Loss)
+                (if (and (= (where "Castle" Next) Off) ("HandEmpty" Next)) (result Mover Win))
                 //(if (and (= (where "Castle" P1) Off) ("HandEmpty" P2)) (result P2 Win))
                 //(if (and (= (where "Castle" P2) Off) ("HandEmpty" P1))(result P1 Win))
              }
         )
       )
 )
+
 
 
 
