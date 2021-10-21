@@ -23,18 +23,9 @@
         )
     )
 )
-(define "StepBackward" 
-    (move Slide (directions {BR BL Backwards} of:All)
-        (to
-            if:(and
-                (is Empty (to)) 
-                )
-        )
-    )
-)
 (define "Retreat"
-    (hop (directions {BR BL Backwards} of:All)
-        (between if:(is Empty (who at:(between))))
+    (slide (directions {BR BL Backwards} of:All)
+        (between before:0 (range 2) if:(is In (between) (sites Empty)))
         (to if:(is Empty(to)))
     )
 )
@@ -95,7 +86,7 @@
                                 ("StepCapture")
                                 ("ImmaJump")
                                 ("StepDiagonalForward")
-                                (if ("EnemyAround") (or ("Retreat") ("StepCapture")))
+                                (if ("EnemyAround") (or ("Retreat") ("StepCapture"))) //("Retreat")
                                 ("Fireintheholeagain4")
                                 ("Fireintheholeagain3")
                         })    
@@ -157,6 +148,7 @@
         (player Colour P2 (colour Red))
     })
 )
+
 
 
 
