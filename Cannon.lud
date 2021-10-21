@@ -39,16 +39,34 @@
     )
 )
 (define "IsBehindAPawn" (= (id "Pawn" Mover) (what at:("AheadSite"))))
+(define "IsBehindTwoPawns" (= (id "Pawn" Mover) (what at:("BSite" steps:2))))
 (define "AheadSite" (ahead (from) #1 (directions Vertex from:(from) to:(to))))
-(define "FireInTheHole"
-    (forEach Direction All
-        (if
-           (and ("IsBehindAPawn") (is Empty ("AheadSite" steps:2)))
-//           (and ("IsBehindTwoPawns") (is Empty ("AheadSite" steps:2)))
-            (if
-                (is Enemy (who at:("AheadSite" steps:3)))
-                (move Remove ("AheadSite" steps:3))
+(define "BSite" (ahead (to) #1 (directions Vertex from:(to) to:(from))))
+(define "Fireintheholeagain4"
+   (forEach Direction All 
+        (if 
+            (and 
+                (and 
+                    (and (is Empty ("AheadSite" steps:3)) (is Empty ("AheadSite" steps:2)))
+                    (is Enemy (who at:("AheadSite" steps:4)))
+                )
+                (and ("IsBehindAPawn") ("IsBehindTwoPawns"))
             )
+            (move Remove ("AheadSite" steps:4))
+        )
+    )
+)
+(define "Fireintheholeagain3"
+   (forEach Direction All 
+        (if 
+            (and 
+                (and 
+                   (is Empty ("AheadSite" steps:2))
+                   (is Enemy (who at:("AheadSite" steps:3)))
+                )
+                (and ("IsBehindAPawn") ("IsBehindTwoPawns"))
+            )
+            (move Remove ("AheadSite" steps:3))
         )
     )
 )
@@ -74,12 +92,12 @@
             (board (square 10) use:Vertex)
             (piece "Pawn"
                Each (or {
-                                //("StepBackward")
                                 ("StepCapture")
                                 ("ImmaJump")
                                 ("StepDiagonalForward")
-                                (if ("EnemyAround") ("Retreat"))
-                                ("FireInTheHole")
+                                (if ("EnemyAround") (or ("Retreat") ("StepCapture")))
+                                ("Fireintheholeagain4")
+                                ("Fireintheholeagain3")
                         })    
             )
             
@@ -132,6 +150,7 @@
         )
       )
 )
+
 
 
 
