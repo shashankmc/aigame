@@ -150,6 +150,14 @@
         )
       )
 )
+(metadata
+    (graphics {
+        (board Style Chess)
+       (player Colour P1 (colour Black))
+        (player Colour P2 (colour Red))
+    })
+)
+
 
 
 
